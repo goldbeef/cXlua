@@ -19,7 +19,7 @@ static int c_swap (lua_State *L) {
     //push the results
     lua_pushnumber(L, arg2);
     lua_pushnumber(L, arg1);
-
+    
     //return number of results
     return 2;
 }
@@ -29,7 +29,14 @@ static int c_swap (lua_State *L) {
 #endif
 
 
+/*
+ * https://lua.programmingpedia.net/en/tutorial/671/introduction-to-lua-c-api
+ *
+ * https://www.lua.org/manual/5.3/manual.html#lua_call
+ *
+ * */
 int main(){
+    /*
     // Create new Lua state and load the lua libraries
     lua_State *L = luaL_newstate();
     luaL_openlibs(L);
@@ -41,5 +48,21 @@ int main(){
     // Tell Lua to execute a lua command
     luaL_dostring(L, "print(c_swap(4, 5))");
     luaL_dostring(L, "print(\"hello world\")");
+     */
+
+    lua_State *lvm_hnd = luaL_newstate();
+    luaL_openlibs(lvm_hnd);
+
+    /* Load a standard Lua function from global table: */
+    lua_getglobal(lvm_hnd, "print");
+
+    /* Push an argument onto Lua C API stack: */
+    lua_pushstring(lvm_hnd, "Hello C API!");
+
+    /* Call Lua function with 1 argument and 0 results: */
+    lua_call(lvm_hnd, 1, 0);
+
+    lua_close(lvm_hnd);
+
     return 0;
 }
