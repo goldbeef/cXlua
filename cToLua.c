@@ -90,18 +90,51 @@ lua-c-api
             LUA_API lua_State      *(lua_tothread) (lua_State *L, int idx);
             LUA_API const void     *(lua_topointer) (lua_State *L, int idx);
 
+        stock operation
+            LUA_API int   (lua_absindex) (lua_State *L, int idx);
+            LUA_API int   (lua_gettop) (lua_State *L);
+            LUA_API void  (lua_settop) (lua_State *L, int idx);
+            LUA_API void  (lua_pushvalue) (lua_State *L, int idx);
+            LUA_API void  (lua_rotate) (lua_State *L, int idx, int n);
+                循环旋转
+            LUA_API void  (lua_copy) (lua_State *L, int fromidx, int toidx);
+            LUA_API int   (lua_checkstack) (lua_State *L, int n);
+            LUA_API void  (lua_xmove) (lua_State *from, lua_State *to, int n);
+
+
+            lua_gettop
+            lua_settop
+            lua_pop
+            lua_remove
+            lua_insert
 
  * */
 
 
+void stackDump(lua_State* L) {
+    int top = lua_gettop(L);
+    for (int i = 1; i <= top; i++) {
+        int type = lua_type(L, i);
+        switch (type) {
+            case LUA_TSTRING:
+                printf("'%s'", lua_tostring(L, i)); break;
+            case LUA_TBOOLEAN:
+                printf(lua_toboolean(L, i) ? "true" : "false"); break;
+            case LUA_TNUMBER:
+                printf("%g", lua_tonumber(L, i)); break;
+            default:
+                printf("%s", lua_typename(L, type)); break;
+        }
+        printf("\t");
+    }
 
+    printf("\n");
+
+}
 int main(){
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
 
-    lua_isinteger()
-
-    lua_type()
     /*
      *
     //lua 解释器
@@ -119,9 +152,20 @@ int main(){
     lua_close(L);
      */
 
+    /*
     int n = lua_checkstack(L, 100);
     printf("n[%d]\n", n);
+    */
 
+    lua_pushnil(L);
+    lua_pushnumber(L, 1);
+    lua_pushnumber(L, 2);
+    lua_pushboolean(L, 1);
+    lua_pushboolean(L, 0);
+    lua_pushstring(L, "hello1");
+    lua_pushstring(L, "hello2");
+
+    stackDump(L);
 
     /*
     // Create new Lua state and load the lua libraries
