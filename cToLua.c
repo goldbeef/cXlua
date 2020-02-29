@@ -131,6 +131,35 @@ void stackDump(lua_State* L) {
     printf("\n");
 
 }
+
+
+int foo(lua_State* L) {
+    //...
+    int* ptr = NULL;
+    *ptr = 10;
+    return 0;
+}
+
+int secure_foo(lua_State* L) {
+    //...
+    lua_pushcfunction(L, foo);
+    stackDump(L);
+    int ret = lua_pcall(L,0,0, 0);
+    return ret;
+}
+
+int getKey(lua_State* L) {
+    luaL_dostring(L, "print(no.b)");
+    return 0;
+}
+
+int secure_getKey(lua_State* L) {
+    lua_pushcfunction(L, getKey);
+    int ret = lua_pcall(L,0,0, 0);
+    return ret == 0;
+}
+
+//testmain
 int main(){
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
@@ -157,6 +186,7 @@ int main(){
     printf("n[%d]\n", n);
     */
 
+    /*
     lua_pushnil(L);
     lua_pushnumber(L, 1);
     lua_pushnumber(L, 2);
@@ -166,6 +196,41 @@ int main(){
     lua_pushstring(L, "hello2");
 
     stackDump(L);
+     */
+
+    /*
+    lua_pushboolean(L, 1);
+    lua_pushnumber(L, 10);
+    lua_pushnil(L);
+    lua_pushstring(L, "hello");
+    stackDump(L);
+
+    lua_pushvalue(L, -4);
+    stackDump(L);
+
+    lua_replace(L, 3);
+    stackDump(L);
+
+    lua_settop(L, 6);
+    stackDump(L);
+
+    lua_rotate(L, 3, 1);
+    stackDump(L);
+
+    lua_remove(L, -3);
+    stackDump(L);
+
+    lua_settop(L, -5);
+    stackDump(L);
+
+    lua_close(L);
+    */
+
+    //foo(L);
+    //secure_foo(L);
+    getKey(L);
+    printf("hello main\n");
+
 
     /*
     // Create new Lua state and load the lua libraries
