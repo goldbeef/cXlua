@@ -134,27 +134,13 @@ void stackDump(lua_State* L) {
 
 
 int foo(lua_State* L) {
-    //...
-    int* ptr = NULL;
-    *ptr = 10;
+    lua_getglobal(L, "tbl");
+    lua_getfield(L, -1, "nofield"); //throw exception
     return 0;
 }
 
-int secure_foo(lua_State* L) {
-    //...
+int secure_foo(lua_State* L) { //wrapper for foo
     lua_pushcfunction(L, foo);
-    stackDump(L);
-    int ret = lua_pcall(L,0,0, 0);
-    return ret;
-}
-
-int getKey(lua_State* L) {
-    luaL_dostring(L, "print(no.b)");
-    return 0;
-}
-
-int secure_getKey(lua_State* L) {
-    lua_pushcfunction(L, getKey);
     int ret = lua_pcall(L,0,0, 0);
     return ret == 0;
 }
@@ -227,8 +213,7 @@ int main(){
     */
 
     //foo(L);
-    //secure_foo(L);
-    getKey(L);
+    printf("%d\n", secure_foo(L));
     printf("hello main\n");
 
 

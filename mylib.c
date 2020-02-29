@@ -25,6 +25,9 @@ static int c_swap (lua_State *L) {
     lua_pushnumber(L, arg2);
     lua_pushnumber(L, arg1);
 
+    //lua_getglobal(L, "tbl");
+    //lua_getfield(L, -1, "hello");
+
     //return number of results
     return 2;
 }
