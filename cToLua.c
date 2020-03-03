@@ -112,6 +112,7 @@ lua-c-api
 
 
 void stackDump(lua_State* L) {
+    printf("stack begin\n");
     int top = lua_gettop(L);
     for (int i = 1; i <= top; i++) {
         int type = lua_type(L, i);
@@ -127,9 +128,9 @@ void stackDump(lua_State* L) {
         }
         printf("\t");
     }
-
     printf("\n");
 
+    printf("stack end\n");
 }
 
 
@@ -142,7 +143,9 @@ int foo(lua_State* L) {
 int secure_foo(lua_State* L) { //wrapper for foo
     lua_pushcfunction(L, foo);
     int ret = lua_pcall(L,0,0, 0);
-    return ret == 0;
+    printf("secure_foo\n");
+    stackDump(L);
+    return ret;
 }
 
 //testmain
